@@ -21,6 +21,8 @@ import VueRangeSlider from 'vue-range-component';
 import 'vue-range-component/dist/vue-range-slider.css';
 Vue.component('vue-range-slider', VueRangeSlider );
 
+
+
 /**Google maps */
 import * as VueGoogleMaps from 'vue2-google-maps';
 import GmapCustomMarker from 'vue2-gmap-custom-marker';
@@ -30,7 +32,7 @@ Vue.use(VueGoogleMaps, {
       libraries: 'places', // This is required if you use the Autocomplete plugin
       // OR: libraries: 'places,drawing'
       // OR: libraries: 'places,drawing,visualization'
-      // (as you require)
+      // (as you require) 
    
       //// If you want to set the version, you can do so:
       // v: '3.26',

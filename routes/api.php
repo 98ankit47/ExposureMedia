@@ -119,7 +119,7 @@ Route::post('mls-search','user\HomeController@searchMls');
 Route::get('home-neighbour','user\HomeController@HomeNeighbour');
 Route::get('home-map-houseList','user\HomeController@HomeMapHouseList');
 Route::post('home-map-house-list-filter','user\HomeController@HomeMapHouseListFilter');
-Route::post('home-house-list-filter','user\HomeController@HomeHouseListFilter');
+Route::get('home-house-list-filter','user\HomeController@HomeHouseListFilter');
 Route::post('user','UserController@signup');
 Route::get('home-filter-data','user\HomeController@HomeFilterData');
 Route::post('news-letter','user\HomeController@NewsLetter');

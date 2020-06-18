@@ -142,7 +142,7 @@
                                       class="btn-status-filter"
                                     >For Sale</button>
                                   </div>
-                                  <form @submit.prevent="HomeFilter" >
+                                  <form @submit.prevent="HomeFilter" @keydown="form.onKeydown($event)">
                                   <div class="row">
                                     <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                                       <select
@@ -151,7 +151,7 @@
                                         class="search-field form-control"
                                         data-default-value
                                          v-model="bhform.type"
-                                        :class="{ 'is-invalid': bhform.errors.has('type') }"
+                                        :class="{ 'is-invalid': form.errors.has('type') }"
                                       >
                                         <option value>Any Type</option>
                                         <option  value="single" >Single House</option>
@@ -168,7 +168,7 @@
                                         name="title"
                                         placeholder="Title"
                                         v-model="bhform.title"
-                                        :class="{ 'is-invalid': bhform.errors.has('title') }"
+                                        :class="{ 'is-invalid': form.errors.has('title') }"
                                       />
                                     </div>
                                     <div class="col-md-4 col-sm-6 col-xs-12 form-group">
@@ -180,7 +180,7 @@
                                         name="address"
                                         placeholder="Address"
                                         v-model="bhform.address"
-                                        :class="{ 'is-invalid': bhform.errors.has('address') }"
+                                        :class="{ 'is-invalid': form.errors.has('address') }"
                                       />
                                     </div>
                                     <div class="col-md-4 col-sm-6 col-xs-12 form-group">
@@ -190,7 +190,7 @@
                                         class="search-field form-control"
                                         data-default-value
                                         v-model="bhform.bedroom"
-                                        :class="{ 'is-invalid': bhform.errors.has('bedroom') }"
+                                        :class="{ 'is-invalid': form.errors.has('bedroom') }"
                                       >
                                         <option value>Any Bedrooms</option>
                                         <option  v-for="index in home.maxbedroom" :key="index" :value="index">{{index}}</option>
@@ -203,7 +203,7 @@
                                         class="search-field form-control"
                                         data-default-value
                                         v-model="bhform.bathroom"
-                                        :class="{ 'is-invalid': bhform.errors.has('bthroom') }"
+                                        :class="{ 'is-invalid': form.errors.has('bthroom') }"
                                       >
                                         <option value>Any Bathroom</option>
                                         <option  v-for="index in home.maxbathroom" :key="index" :value="index">{{index}}</option>
@@ -220,12 +220,10 @@
                                       />
                                     </div>
                                     <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                      <label>Add Price <span>{{bhform.price_range}}</span></label>
-                                      <vue-range-slider  :enableCross="false" :contained="true" :lazy="false" :bg-style="bgStyle" :min="home.minprice" tooltip-dir="bottom" tooltip="hover" :tooltip-style="tooltipStyle" :max="home.maxprice" :process-style="processStyle" v-model="bhform.price_range"></vue-range-slider> 
+                                      <vue-range-slider  :enableCross="false" :contained="true" :lazy="false" :bg-style="bgStyle" :min="min_price" tooltip-dir="bottom" tooltip="hover" :tooltip-style="tooltipStyle" :max="max_price" :process-style="processStyle" v-model="bhform.price_range"></vue-range-slider> 
                                     </div>
                                     <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                      <label>Add Area <span>{{bhform.area_range}}</span></label>
-                                      <vue-range-slider  :enableCross="false" :contained="true" :lazy="false" :bg-style="bgStyle" :min="home.minarea" tooltip-dir="bottom" tooltip="hover" :tooltip-style="tooltipStyle" :max="home.maxarea" :process-style="processStyle" v-model="bhform.area_range"></vue-range-slider> 
+                                      <vue-range-slider  :enableCross="false" :contained="true" :lazy="false" :bg-style="bgStyle" :min="min_area" tooltip-dir="bottom" tooltip="hover" :tooltip-style="tooltipStyle" :max="max_area" :process-style="processStyle" v-model="bhform.area_range"></vue-range-slider> 
                                     </div>
                                   
                                     <div
@@ -684,10 +682,10 @@
   data(){
     return{
       home:{},
-      min_area:0,
-      max_area:0,
-      min_price:0,
-      max_price:0,
+      min_area:1000,
+      max_area:3000,
+      min_price:200000,
+      max_price:400000,
       bhform: new Form({
         address: "",
         bedroom: "",
@@ -698,11 +696,11 @@
         area_range:[],
       }),
       bgStyle: {
-          backgroundColor: '#ffffff',
+          backgroundColor: '#fff',
           boxShadow: 'inset 0.5px 0.5px 3px 1px rgba(0,0,0,.36)'
       },
       processStyle: {
-          backgroundColor: '#FF7F00'
+          backgroundColor: '#666'
       },
       tooltipStyle: {
           backgroundColor: '#666',
@@ -713,23 +711,14 @@
   methods:  {
    loadHome()
     {
-      axios.get("api/home-filter-data").then(({data})=>(this.home = data,
-      this.bhform.price_range = [parseInt(data.minprice), parseInt(data.maxprice)],
-      this.bhform.area_range = [parseInt(data.minarea), parseInt(data.maxarea)]
-      )); 
-      
+      axios.get("api/home-filter-data").then(({data})=>(this.home = data)); 
     },
     HomeFilter() {
       // Submit the form via a POST request
-      // this.form
-        // .post("/api/home-house-list-filter")
-        // .then(({ data }) => {
-        //   console.log(data);})
-        //  let sdev = this.bhform.address;
-        // //   if(sdev == '') {
-        // //     sdev='all';
-        // //   }
-        //  window.location = 'search?type=dev&key='+sdev;
+      this.form
+        .post("/api/home-house-list-filter")
+        .then(({ data }) => {
+          console.log(data);})
     }
   },
 
